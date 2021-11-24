@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="TiempoMargen" default="10.0"/>
+
+    <arg name="path" default="$(env HOME)/CSV/"/>
+    <param name="Subcarpeta" type="str" command="date +'%d-%m-%Y_%Ih%Mm%Ss'"/>
+
+    <node name="waypoint_gen" pkg="ardupilot_mavros" type="waypoint_gen" output="screen">
+        <rosparam command="load" file="$(find ardupilot_mavros)/resource/waypoint_gen.yaml" />
+	</node> 
+
+    <node name="$(anon csv_odometry_1)" pkg="ardupilot_mavros" type="csv_odometry" output="screen">
+        <param name="Ruta" type="str" value="$(arg path)"/>
+        <param name="Topico" type="str" value="/Odometry"/>
+        <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+        <param name="Nombre" type="str" value="odometry.csv"/>
+    </node>
+
+    <node name="$(anon csv_odometry_2)" pkg="ardupilot_mavros" type="csv_odometry" output="screen">
+        <param name="Ruta" type="str" value="$(arg path)"/>
+        <param name="Topico" type="str" value="/Setpoint"/>
+        <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+        <param name="Nombre" type="str" value="setpoint.csv"/>
+    </node>
+
+    <node name="plot" pkg="ardupilot_mavros" type="plot.py" output="screen">
+        <param name="Ruta" type="str" value="$(arg path)"/>
+        <param name="TiempoMargen" type="double" value="$(arg TiempoMargen)"/>
+    </node>
+</launch>
