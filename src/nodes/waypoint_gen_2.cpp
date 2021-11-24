@@ -214,7 +214,7 @@ namespace ardupilot_mavros {
       z1 = _param.DistanciaTrayectoria.z()*sin(W3*t);
 
       double expV = exp(-_param.Exp*(t-_param.TiempoTrayectoria));
-      if (!isfinite(expV)){
+      if (!std::isfinite(expV)){
         expV = 10000.0;
       }
       clamp(expV,0.00001,10000.0);
